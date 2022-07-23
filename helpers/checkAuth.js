@@ -2,11 +2,6 @@
 const jwt = require("jsonwebtoken");
 
 const checkAuth = (req, res, next) => {
-  // Check bith access and refresh tokens exist in cookie
-  if (req.cookies.accessToken || req.cookies.refreshToken) {
-    return res.status(401).send("Authentication error");
-  }
-
   const checkRefreshToken = () => {
     try {
       // Verify refreshToken from cookie
@@ -16,7 +11,7 @@ const checkAuth = (req, res, next) => {
       );
 
       // Generate new accessToken
-      const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
+      const newAccessToken = jwt.sign({ email }, process.env.JWT_SECRET_KEY, {
         expiresIn: "5m",
       });
 
@@ -24,7 +19,7 @@ const checkAuth = (req, res, next) => {
       req.email = email;
 
       // Set response cookie
-      res.cookie(process.env.COOKIE_NAME, token, { maxAge: 300000 });
+      res.cookie("accessToken", newAccessToken, { httpOnly: true });
 
       // Proceed to actual step
       next();

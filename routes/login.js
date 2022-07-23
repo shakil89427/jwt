@@ -49,8 +49,8 @@ router.post("/login", async (req, res) => {
     );
 
     // set response cookie
-    res.cookie("accessToken", accessToken, { maxAge: 300000 });
-    res.cookie("refreshToken", refreshToken, { maxAge: 604800000 });
+    res.cookie("accessToken", accessToken, { httpOnly: true });
+    res.cookie("refreshToken", refreshToken, { httpOnly: true });
 
     // send response data
     res.send(existUser);
